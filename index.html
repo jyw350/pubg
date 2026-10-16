@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0c1113">
+  <meta name="description" content="벤틀리 화물 개인용 뽑기 시뮬레이터. 공식 확률과 원본 이미지, 황금과 얼티밋 공개 연출.">
+  <title>벤틀리 보급고 · 개인용 시뮬레이터</title>
+  <link rel="icon" href="assets/back-gold.webp">
+  <link rel="stylesheet" href="style.css">
+  <script src="data.js" defer></script><script src="core.js" defer></script><script src="app.js" defer></script>
+</head>
+<body>
+<div id="viewport">
+<main id="stage" aria-label="벤틀리 뽑기 시뮬레이터">
+  <section id="home" class="screen">
+    <img class="cover" src="assets/cover.png" alt="배틀그라운드 벤틀리 보급고 원본 화면" draggable="false">
+    <div class="personal-badge">PERSONAL SIMULATOR <span>무료 · 무제한</span></div>
+    <button class="hotspot craft-tab" data-panel="craft" aria-label="특수 제작 열기"></button>
+    <button class="hotspot guide-link" data-panel="help" aria-label="제작소 가이드"></button>
+    <button class="hotspot shop-link" data-panel="craft" aria-label="벤틀리 아이템 목록"></button>
+    <button class="hotspot craft-link" data-panel="craft" aria-label="벤틀리 특수 제작"></button>
+    <div class="wallet"><span class="coin">G</span> ∞ <span class="wallet-note">무료 뽑기</span></div>
+    <div class="resources"><span>▱ <b id="ticketCount">0</b></span><span>♧ <b id="tokenCount">0</b></span><span>◎ <b id="creditCount">0</b></span></div>
+    <aside class="milestones" aria-label="누적 보상">
+      <h2>누적 보상</h2><p>화물을 연 횟수에 따라 추가 보상을 획득하세요.</p>
+      <div class="progress-caption">◇ ───── 현재 누적: <strong id="totalCount">0</strong> ───── ◇</div>
+      <div id="milestoneList" class="milestone-list"></div>
+      <button class="game-button claim-all" id="claimAll">모두 받기</button>
+    </aside>
+    <button class="game-button detail-button" data-panel="rates">상세 상품 보러가기</button>
+    <div class="draw-controls">
+      <div><button id="drawOne" class="draw-button"><span><em>1</em>개 열기</span><small>▱ 무제한 / 1</small></button><p>포함 <span>♧ 15</span></p></div>
+      <div><button id="drawTen" class="draw-button ten"><span><em>10</em>개 열기</span><small><i class="coin">G</i> 2,500</small></button><p>포함 <span>♧ 150</span></p></div>
+    </div>
+    <button class="reward-help" data-panel="rates">보상 안내 ⓘ</button>
+    <nav class="utility-bar" aria-label="시뮬레이터 메뉴">
+      <button data-panel="help">제작소 가이드</button><div class="bar-spacer"></div>
+      <span id="saveStatus">기록 자동 저장</span>
+      <button data-panel="inventory">획득 내역 <span id="collectionCount">0</span></button>
+      <button data-panel="preview">연출 미리보기</button><button data-panel="settings" aria-label="설정">⚙ 설정</button>
+      <button id="fullscreen" aria-label="전체 화면">⛶</button>
+    </nav>
+  </section>
+
+  <section id="opening" class="screen opening" hidden aria-label="화물 개봉 연출">
+    <div class="warehouse"></div><div class="opening-vignette"></div>
+    <div class="crate-light"><div class="light-core"></div><div class="light-rays"></div><div class="light-seam"></div></div>
+    <div class="smoke smoke-a"></div><div class="smoke smoke-b"></div><div class="smoke smoke-c"></div>
+    <div class="opening-flash"></div><div class="opening-label">BENTLEY <span>SUPPLY CACHE</span></div>
+    <button id="skipOpening" class="game-button skip">건너뛰기 <kbd>SPACE</kbd></button>
+  </section>
+
+  <section id="results" class="screen result-screen" hidden aria-label="화물 뽑기 결과">
+    <div class="result-ambient"></div><div class="result-lines"></div>
+    <div id="previewBadge" class="preview-badge" hidden>연출 미리보기 · 획득 기록에 포함되지 않습니다</div>
+    <button id="resultBack" class="back-link">〈 보급고</button>
+    <div class="result-heading"><span class="diamond">◇</span><h1>화물 열기</h1><span class="diamond">◇</span></div>
+    <div class="result-subline"><span id="batchLabel">벤틀리 화물 × 10</span><span id="revealedCount">0 / 10 공개</span></div>
+    <div id="cardGrid" class="card-grid"></div>
+    <p id="revealHint" class="reveal-hint">카드를 눌러 아이템을 확인하세요.</p>
+    <div class="result-actions"><button id="revealAll" class="game-button primary">모두 열기 <kbd>SPACE</kbd></button><button id="resultDone" class="game-button" hidden>확인</button><button id="againTen" class="game-button primary" hidden>10개 다시 열기</button></div>
+    <div class="batch-bonus" id="batchBonus">포함 <span>♧ 벤틀리 토큰 150</span></div>
+    <div class="result-footer"><span>ESC 보급고</span><span>1–9, 0 개별 공개</span><button id="toggleSound">♪ 사운드 켜짐</button></div>
+  </section>
+
+  <section id="spotlight" class="spotlight" hidden aria-label="특별 아이템 공개">
+    <div class="spot-rays"></div><div class="spot-ring"></div><div class="spot-flare"></div>
+    <div class="spot-title"><span id="spotGrade">LEGENDARY</span><h2>아이템 획득</h2></div>
+    <div id="spotArt" class="spot-art"></div><h3 id="spotName"></h3><p id="spotNote"></p>
+    <button id="closeSpotlight" class="game-button">계속 <kbd>SPACE</kbd></button>
+  </section>
+
+  <canvas id="particles" width="1920" height="1080" aria-hidden="true"></canvas>
+  <div id="panelOverlay" class="panel-overlay" hidden>
+    <section id="panel" class="panel" role="dialog" aria-modal="true" aria-labelledby="panelTitle">
+      <header class="panel-header"><div><span class="eyebrow">BENTLEY WORKSHOP</span><h2 id="panelTitle"></h2></div><button id="closePanel" aria-label="창 닫기">×</button></header>
+      <div id="panelBody" class="panel-body"></div>
+    </section>
+  </div>
+  <div id="toast" role="status" hidden></div>
+</main>
+</div>
+<p class="portrait-note">가로 화면으로 돌리면 원본 비율로 더 크게 즐길 수 있습니다.</p>
+<noscript>이 시뮬레이터는 JavaScript를 켜야 실행됩니다.</noscript>
+</body>
+</html>

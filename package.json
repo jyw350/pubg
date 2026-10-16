@@ -1,0 +1,7 @@
+{
+  "name": "bentley-personal-simulator",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Personal, offline-capable Bentley cargo simulator",
+  "scripts": {"start": "node server.cjs", "test": "node --test tests/core.test.cjs"}
+}
